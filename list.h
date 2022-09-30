@@ -1,9 +1,9 @@
 // =================================================================
 //
 // File: list.h
-// Author:
-// Date:
-// 
+// Author: Erik Cabrera
+// Date: 26 de septiembre de 2022
+//
 // =================================================================
 #ifndef LIST_H
 #define LIST_H
@@ -226,7 +226,14 @@ T List<T>::get(uint index) const {
 	T aux;
 
 	// TO DO
-	return aux;
+	Node<T> *iterator = head;
+	if (index >= size) {
+		throw IndexOutOfBounds();
+	}
+	for (int i = 0; i < index; i++) {
+		iterator = iterator->next;
+	}
+	return iterator->value;
 }
 
 // =================================================================
@@ -276,6 +283,24 @@ void List<T>::push_back(T val) {
 template <class T>
 void List<T>::insert_at(T val, uint index) {
 	// TO DO
+	if (index > size) {
+	throw IndexOutOfBounds();
+	}
+	if (index == 0) {
+	head = new Node<T>(val, head);
+	size++;
+	return;
+	}
+
+	Node<T> *iterator = head;
+
+	for (int i = 0; i < index - 1; i++){
+	iterator = iterator->next;
+	}
+
+	Node<T> *insert = new Node<T>(val, iterator->next);
+	iterator->next = insert;
+	size++;
 }
 
 // =================================================================
@@ -348,6 +373,31 @@ template <class T>
 T List<T>::remove_at(uint index) {
 	T aux;
 	// TO DO
+	if (index >= size) {
+	throw IndexOutOfBounds();
+	}
+
+	Node<T> *del;
+	if (index == 0) {
+	del = head;
+	head = head->next;
+	aux = del->value;
+	delete del;
+	size--;
+	return aux;
+	}
+
+	Node<T> *iterator = head;
+
+	for (int i = 0; i < index - 1; i++) {
+	iterator = iterator->next;
+	}
+	del = iterator->next;
+	iterator->next = iterator->next->next;
+	aux = del->value;
+	delete del;
+	size--;
+
 	return aux;
 }
 
@@ -360,6 +410,16 @@ T List<T>::remove_at(uint index) {
 template <class T>
 long int List<T>::indexOf(T val) const {
 	// TO DO
+	Node<T> *iterator = head;
+int i = 0;
+
+	while (iterator != NULL) {
+		if (iterator->value == val) {
+			return i;
+		}
+		iterator = iterator->next;
+		i++;
+	}
 	return -1;
 }
 
